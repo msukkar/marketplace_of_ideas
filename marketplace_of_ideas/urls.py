@@ -12,9 +12,25 @@ Class-based views
 Including another URLconf
     1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from marketplace_of_ideas import views
 from django.conf.urls import include, url
-from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^users$', views.test),
+    url(r'^users/new$', views.test),
+    url(r'^users/([0-9]+)$', views.test),
+
+    url(r'^transactions$', views.test),
+    url(r'^transactions/new$', views.test),
+    url(r'^transactions/([0-9]+)$', views.test),
+
+    url(r'^posts$', views.test),
+    url(r'^posts/new$', views.test),
+    url(r'^posts/([0-9]+)$', views.test),
+
+    url(r'^comments$', views.test),
+    url(r'^comments/new$', views.test),
+    url(r'^comments/([0-9]+)$', views.test),
+
+    url(r'^$', views.test),
 ]
