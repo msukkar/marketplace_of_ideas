@@ -60,3 +60,6 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# Ignore settings.py
+marketplace_of_ideas/settings.py

@@ -71,20 +71,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'marketplace_of_ideas.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'marketplace',
-        'USER': 'root',
+        'NAME': 'cs4501',
+        'USER': 'www',
         'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'HOST': 'mysql',
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
