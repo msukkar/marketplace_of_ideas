@@ -16,21 +16,21 @@ from marketplace_of_ideas import views
 from django.conf.urls import include, url
 
 urlpatterns = [
-    url(r'^users$', views.test),
-    url(r'^users/new$', views.test),
-    url(r'^users/([0-9]+)$', views.test),
+    url(r'^users$', views.users),
+    url(r'^users/new$', views.users),
+    url(r'^users/([0-9]+)$', views.users),
 
-    url(r'^transactions$', views.test),
-    url(r'^transactions/new$', views.test),
-    url(r'^transactions/([0-9]+)$', views.test),
+    url(r'^transactions$', views.transactions),
+    url(r'^transactions/new$', views.transactions),
+    url(r'^transactions/([0-9]+)$', views.transactions),
 
-    url(r'^posts$', views.test),
-    url(r'^posts/new$', views.test),
-    url(r'^posts/([0-9]+)$', views.test),
+    url(r'^posts$', views.posts),
+    url(r'^posts/new$', views.posts),
+    url(r'^posts/([0-9]+)$', views.posts),
 
-    url(r'^comments$', views.test),
-    url(r'^comments/new$', views.test),
-    url(r'^comments/([0-9]+)$', views.test),
+    url(r'^comments$', views.comments),
+    url(r'^comments/new$', views.comments),
+    url(r'^comments/([0-9]+)$', views.comments),
 
     url(r'^$', views.test),
 ]

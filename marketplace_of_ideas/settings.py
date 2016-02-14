@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'marketplace_of_ideas'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -76,8 +77,11 @@ WSGI_APPLICATION = 'marketplace_of_ideas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'marketplace',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
     }
 }
 

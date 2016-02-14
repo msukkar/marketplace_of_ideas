@@ -10,10 +10,12 @@ class User(models.Model):
 class BlogPost(models.Model):
 	title = models.TextField()
 	body = models.TextField()
-	authors = models.ManyToManyField(User)
+	author = models.ForeignKey(User)
 
 class Transaction(models.Model):
-	time = models.DateTimeField()
+	time = models.DateTimeField(
+		auto_now_add=True
+	)
 	payer = models.ForeignKey(User, related_name='payee')
 	receiver = models.ForeignKey(User, related_name='receivee')
 	blog_post = models.ForeignKey(BlogPost)
