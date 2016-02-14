@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cs4501',
         'USER': 'www',
-        'PASSWORD': '',
+        'PASSWORD': 'S3cure',
         'HOST': 'mysql',
     }
 }
