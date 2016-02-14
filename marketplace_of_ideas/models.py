@@ -5,22 +5,19 @@ class User(models.Model):
 	first_name = models.CharField(max_length=50)
 	last_name = models.CharField(max_length=50)
 	password = models.CharField(max_length=50)
-
-class Relationship(models.Model):
-	follower = models.OneToOneField(User)
-	following = models.OneToOneField(User)
-
-class Transaction(models.Model):
-	time = models.DateTimeField()
-	payer = models.ForeignKey(User)
-	receiver = models.ForeignKey(User)
-	blog_post = models.ForeignKey(BlogPost)
-	amount = models.DecimalField(max_digits=10, decimal_places=2)
+	followed_people = models.ManyToManyField('self', related_name='follows', symmetrical=False)
 
 class BlogPost(models.Model):
 	title = models.TextField()
 	body = models.TextField()
 	authors = models.ManyToManyField(User)
+
+class Transaction(models.Model):
+	time = models.DateTimeField()
+	payer = models.ForeignKey(User, related_name='payee')
+	receiver = models.ForeignKey(User, related_name='receivee')
+	blog_post = models.ForeignKey(BlogPost)
+	amount = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Comment(models.Model):
 	blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
