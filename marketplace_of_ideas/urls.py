@@ -16,21 +16,21 @@ from marketplace_of_ideas import views
 from django.conf.urls import include, url
 
 urlpatterns = [
-    url(r'^users$', views.users),
-    url(r'^users/new$', views.users),
-    url(r'^users/([0-9]+)$', views.users),
+    url(r'^api/v1/users$', views.users),
+    url(r'^api/v1/users/new$', views.users),
+    url(r'^api/v1/users/([0-9]+)$', views.users),
 
-    url(r'^transactions$', views.transactions),
-    url(r'^transactions/new$', views.transactions),
-    url(r'^transactions/([0-9]+)$', views.transactions),
+    url(r'^api/v1/transactions$', views.transactions),
+    url(r'^api/v1/transactions/new$', views.transactions),
+    url(r'^api/v1/transactions/([0-9]+)$', views.transactions),
 
-    url(r'^posts$', views.posts),
-    url(r'^posts/new$', views.posts),
-    url(r'^posts/([0-9]+)$', views.posts),
+    url(r'^api/v1/posts$', views.posts),
+    url(r'^api/v1/posts/new$', views.posts),
+    url(r'^api/v1/posts/([0-9]+)$', views.posts),
 
-    url(r'^comments$', views.comments),
-    url(r'^comments/new$', views.comments),
-    url(r'^comments/([0-9]+)$', views.comments),
+    url(r'^api/v1/comments$', views.comments),
+    url(r'^api/v1/comments/new$', views.comments),
+    url(r'^api/v1/comments/([0-9]+)$', views.comments),
 
     url(r'^$', views.test),
 ]
