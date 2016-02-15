@@ -1,0 +1,18 @@
+# # Use phusion/passenger-full as base image. To make your builds reproducible, make
+# # sure you lock down to a specific version, not to `latest`!
+# # See https://github.com/phusion/passenger-docker/blob/master/Changelog.md for
+# # a list of version numbers.
+mysql:
+    image: mysql:5.7.10
+    environment:
+        MYSQL_DATABASE: cs4501
+        MYSQL_USER: www
+        DATABASE_PASSWORD: S3cure
+        MYSQL_ROOT_PASSWORD: S3cure
+web:
+    build: Dockerfile
+    ports:
+        - "8000:8000"
+    command: mod_wsgi-express start-server --working-directory /app/marketplace /app/marketplace/marketplace_of_ideas/wsgi.py &
+    links:
+        - mysql

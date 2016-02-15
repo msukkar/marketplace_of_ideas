@@ -78,7 +78,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
         'NAME': 'cs4501',
-        'USER': 'www',
+        'USER': 'root',
         'PASSWORD': 'S3cure',
         'HOST': 'mysql',
     }
