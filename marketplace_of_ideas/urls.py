@@ -17,19 +17,19 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     url(r'^api/v1/users$', views.users),
-    url(r'^api/v1/users/new$', views.users),
+    url(r'^api/v1/users/new$', views.create_user),
     url(r'^api/v1/users/(?P<user_id>[0-9]+)$', views.users),
 
     url(r'^api/v1/transactions$', views.transactions),
-    url(r'^api/v1/transactions/new$', views.transactions),
+    url(r'^api/v1/transactions/new$', views.create_transaction),
     url(r'^api/v1/transactions/(?P<transaction_id>[0-9]+)$', views.transactions),
 
     url(r'^api/v1/posts$', views.posts),
-    url(r'^api/v1/posts/new$', views.posts),
+    url(r'^api/v1/posts/new$', views.create_post),
     url(r'^api/v1/posts/(?P<post_id>[0-9]+)$', views.posts),
 
     url(r'^api/v1/comments$', views.comments),
-    url(r'^api/v1/comments/new$', views.comments),
+    url(r'^api/v1/comments/new$', views.create_comment),
     url(r'^api/v1/comments/(?P<comment_id>[0-9]+)$', views.comments),
 
     url(r'^$', views.test),
