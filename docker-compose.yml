@@ -13,6 +13,6 @@ web:
     build: .
     ports:
         - "8000:8000"
-    command: mod_wsgi-express start-server --working-directory /app/marketplace /app/marketplace/marketplace_of_ideas/wsgi.py &
+    command: bash -c "python /app/marketplace/manage.py migrate && mod_wsgi-express start-server --working-directory /app/marketplace /app/marketplace/marketplace_of_ideas/wsgi.py" &
     links:
         - mysql
