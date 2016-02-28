@@ -79,14 +79,14 @@ def posts(request, post_id=-1):
             return JsonResponse(serializers.serialize('json', BlogPost.objects.all()), safe=False)
         else:
             try:
-                post_post = BlogPost.objects.get(pk=post_id)
+                blog_post = BlogPost.objects.get(pk=post_id)
                 return JsonResponse(serializers.serialize('json', [blog_post]), safe=False)
             except BlogPost.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No blog post with that id exists' })
     elif request.method == 'POST':
         if not post_id == -1:
             try:
-                if 'title' not in request.POST['title'] or 'body' not in request.POST or 'author' not in request.POST:
+                if 'title' not in request.POST or 'body' not in request.POST or 'author_id' not in request.POST:
                     return JsonResponse({ 'success': False, 'response': 'Missing required field(s)' })
                 post = BlogPost.objects.filter(pk=post_id).update(title=request.POST['title'], body=request.POST['body'], author_id=request.POST['author_id'])
                 return JsonResponse({ 'success': True, 'id': post_id, 'title': request.POST['title'], 'body': request.POST['body'], 'author': request.POST['author_id'] })
@@ -100,7 +100,7 @@ def posts(request, post_id=-1):
 
 @csrf_exempt
 def create_post(request):
-    if 'title' not in request.POST['title'] or 'body' not in request.POST or 'author' not in request.POST:
+    if 'title' not in request.POST or 'body' not in request.POST or 'author_id' not in request.POST:
         return JsonResponse({ 'success': False, 'response': 'Missing required field(s)' })
 
     post = BlogPost(title=request.POST['title'], body=request.POST['body'], author_id=request.POST['author_id'])

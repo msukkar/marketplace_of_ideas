@@ -14,7 +14,7 @@ def home(request):
 		context = {
 			'response': response.json()
 		}
-		template = loader.get_template('start.html')
+		template = loader.get_template('frontend/start.html')
 		return HttpResponse(template.render(context, request))
 
 	return JsonResponse({ 'success': False })
@@ -22,6 +22,12 @@ def home(request):
 def post(request, post_id):
 	if request.method == 'GET':
 		url = 'http://exp-api:8000/experience/v1/post/' + str(post_id)
-		response = request.get(url)
-		return JsonResponse(response.json(), safe=False)
+		response = requests.get(url)
+		return HttpResponse(response.text)
+		context = {
+			'response': response.json()
+		}
+		template = loader.get_template('frontend/detail.html')
+		return HttpResponse(template.render(context, request))
+
 	return JsonResponse({ 'success': False })
