@@ -2,49 +2,30 @@
 # # sure you lock down to a specific version, not to `latest`!
 # # See https://github.com/phusion/passenger-docker/blob/master/Changelog.md for
 # # a list of version numbers.
-#mysql:
-#    image: mysql:5.7.10
-#    environment:
-#        MYSQL_DATABASE: cs4501
-#        MYSQL_USER: root
-#        DATABASE_PASSWORD: S3cure
-#        MYSQL_ROOT_PASSWORD: S3cure
 models:
     image: tp33/django:1.2
     external_links:
         - mysql:db
     ports:
-        - "8000:8000"
+        - "8001:8000"
     volumes:
         - /home/kienan/marketplace_of_ideas/model_api:/app
-    command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes model_api/wsgi.py" &
-# EXAMPLE TEMPLATE: 
-# models:
-#    image: tp33/django:1.2
-#    external_links:
-#       - mysql:db
-#    ports:
-#       - "8001:8000"
-#    volumes:
-#       - /home/marketplace_of_ideas/model_api:/app
-#    command: "mod_wsgi-express start-server --reload-on-changes model_api/wsgi.py"
-
-# exp:
-#    image: tp33/django:1.2
-#    links:
-#       - models:models-api
-#    ports:
-#       - "8002:8000"
-#    volumes:
-#       - /home/marketplace_of_ideas/experience_api:/app
-#    command: "mod_wsgi-express start-server --reload-on-changes experience_api/wsgi.py"
-
-# web:
-#    image: tp33/django:1.2
-#    links:
-#       - exp:exp-api
-#    ports:
-#       - "8000:8000"
-#    volumes:
-#       - /home/marketplace_of_ideas/frontend:/app
-#    command: "mod_wsgi-express start-server --reload-on-changes frontend/wsgi.py"
+    command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes model_api/wsgi.py" & 
+exp:
+    image: tp33/django:1.2
+    links:
+       - models:models-api
+    ports:
+       - "8002:8000"
+    volumes:
+       - /home/kienan/marketplace_of_ideas/experience_api:/app
+    command: bash -c "pip install requests && mod_wsgi-express start-server --reload-on-changes experience_api/wsgi.py"
+web:
+    image: tp33/django:1.2
+    links:
+       - exp:exp-api
+    ports:
+       - "8000:8000"
+    volumes:
+       - /home/kienan/marketplace_of_ideas/frontend:/app
+    command: "mod_wsgi-express start-server --reload-on-changes frontend/wsgi.py"
