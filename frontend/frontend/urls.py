@@ -16,5 +16,6 @@ from django.conf.urls import include, url
 from frontend import views
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+	url(r'^home', views.home),
+	url(r'^post/?P<post_id>[0-9]+)$', views.post),
 ]

@@ -28,4 +28,4 @@ web:
        - "8000:8000"
     volumes:
        - /home/kienan/marketplace_of_ideas/frontend:/app
-    command: "mod_wsgi-express start-server --reload-on-changes frontend/wsgi.py"
+    command: bash -c "pip install requests && mod_wsgi-express start-server --reload-on-changes frontend/wsgi.py"
