@@ -16,5 +16,6 @@ from django.conf.urls import include, url
 from experience_api import views
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^experience/v1/home$', views.home),
+    url(r'^experience/v1/post/?P<post_id>[0-9]+)$', views.post),
 ]

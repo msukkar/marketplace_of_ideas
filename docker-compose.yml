@@ -16,3 +16,33 @@ web:
     command: bash -c "python /app/marketplace/manage.py migrate && mod_wsgi-express start-server --working-directory /app/marketplace /app/marketplace/marketplace_of_ideas/wsgi.py" &
     links:
         - mysql
+# EXAMPLE TEMPLATE: 
+# models:
+#    image: tp33/django:1.2
+#    external_links:
+#       - mysql:db
+#    ports:
+#       - "8001:8000"
+#    volumes:
+#       - /home/tp/stuff-models:/app
+#    command: "mod_wsgi-express start-server --reload-on-changes stuff-models/wsgi.py"
+
+# exp:
+#    image: tp33/django:1.2
+#    links:
+#       - models:models-api
+#    ports:
+#       - "8002:8000"
+#    volumes:
+#       - /home/tp/stuff-exp:/app
+#    command: "mod_wsgi-express start-server --reload-on-changes stuff-exp/wsgi.py"
+
+# web:
+#    image: tp33/django:1.2
+#    links:
+#       - exp:exp-api
+#    ports:
+#       - "8000:8000"
+#    volumes:
+#       - /home/tp/stuff-web:/app
+#    command: "mod_wsgi-express start-server --reload-on-changes stuff-web/wsgi.py"
