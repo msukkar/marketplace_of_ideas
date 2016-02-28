@@ -81,8 +81,7 @@ DATABASES = {
         'NAME': 'cs4501',
         'USER': 'www',
         'PASSWORD': 'S3cure',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'HOST': 'mysql',   # Or an IP Address that your DB is hosted
     }
 }
 
