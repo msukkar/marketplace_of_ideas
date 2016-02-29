@@ -11,11 +11,6 @@ def home(request):
 	if request.method == 'GET':
 		response = requests.get('http://exp-api:8000/experience/v1/home')
 		# Probably rearrange based on popularity, time, etc
-		#return JsonResponse(response.json(), safe=False)
-		try:
-			json.loads(str(response))
-		except ValueError:
-			return JsonResponse({ 'success': False })
 		context = {
 			'response': response.json()
 		}
