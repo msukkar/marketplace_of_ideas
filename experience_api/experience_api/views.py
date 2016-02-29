@@ -12,7 +12,7 @@ def home(request):
 
 def post(request, post_id):
 	if request.method == 'GET':
-		url = 'http://model-api:8000/api/v1/posts/' + str(post_id)
+		url = 'http://models-api:8000/api/v1/posts/' + str(post_id)
 		response = requests.get(url)
 		return HttpResponse(response.text)
 		#return JsonResponse(response.json(), safe=False)
