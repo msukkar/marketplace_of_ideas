@@ -14,6 +14,6 @@ def post(request, post_id):
 	if request.method == 'GET':
 		url = 'http://models-api:8000/api/v1/posts/' + str(post_id)
 		response = requests.get(url)
-		return HttpResponse(response.text)
+		return JsonResponse(response.json(), safe=False)
 		#return JsonResponse(response.json(), safe=False)
 	return JsonResponse({ 'success': False })

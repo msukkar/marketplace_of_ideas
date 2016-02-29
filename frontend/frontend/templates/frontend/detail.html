@@ -1,3 +1,12 @@
 <html>
 <h1> Detail View <h1>
+{% if response %}
+	{% for blog in response %}
+		<h1> Here's a blog post </h1>
+		<h1> {{ blog.pk }} </h1>
+		<h5> {{ blog.fields.title }} </h5>
+		<h5> {{ blog.fields.body }} </h5>
+	{% endfor %}
+	<p> {{ response }} </p>
+{% endif %}
 </html>
