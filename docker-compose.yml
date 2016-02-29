@@ -9,7 +9,7 @@ models:
     ports:
         - "8001:8000"
     volumes:
-        - /home/kienan/marketplace_of_ideas/model_api:/app
+        - ./model_api:/app
     command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes model_api/wsgi.py" & 
 exp:
     image: tp33/django:1.2
@@ -18,7 +18,7 @@ exp:
     ports:
        - "8002:8000"
     volumes:
-       - /home/kienan/marketplace_of_ideas/experience_api:/app
+       - ./experience_api:/app
     command: bash -c "pip install requests && mod_wsgi-express start-server --reload-on-changes experience_api/wsgi.py"
 web:
     image: tp33/django:1.2
@@ -27,5 +27,5 @@ web:
     ports:
        - "8000:8000"
     volumes:
-       - /home/kienan/marketplace_of_ideas/frontend:/app
+       - ./frontend:/app
     command: bash -c "pip install requests && mod_wsgi-express start-server --reload-on-changes frontend/wsgi.py"
