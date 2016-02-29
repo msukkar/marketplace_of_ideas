@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 import requests
+import json
 
 @csrf_exempt
 def home(request):
@@ -11,6 +12,10 @@ def home(request):
 		response = requests.get('http://exp-api:8000/experience/v1/home')
 		# Probably rearrange based on popularity, time, etc
 		#return JsonResponse(response.json(), safe=False)
+		try:
+			json.loads(str(response))
+		except ValueError:
+			return JsonResponse({ 'success': False })
 		context = {
 			'response': response.json()
 		}
