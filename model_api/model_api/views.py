@@ -138,7 +138,7 @@ def comments(request, comment_id=-1):
 def post_comments(request, post_id=-1):
     try:
         post = Post.objects.get(pk=post_id)
-        return JsonResponse(serializers.serialize('json', [post.comment_set]), safe=False)
+        return JsonResponse(serializers.serialize('json', [post.comment_set()]), safe=False)
     except Post.DoesNotExist:
         return JsonResponse({ 'success': False, 'reponse': 'No post with that id exists' })
 
