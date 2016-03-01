@@ -6,8 +6,8 @@
     {% if response %}
       {% for blog in response %}
         <div class="blog-post" id="{{blog.pk}}">
-          <h2> {{ blog.fields.title }} </h2>
-          <h4> {{ blog.fields.author }} </h4>
+          <a href = "{% url 'blog_post' blog.pk%}"><h2> {{ blog.fields.title }} </h2> </a>
+          <h4> {{ blog.fields.author_name }} </h4>
           <p> {{ blog.fields.body }} </p>
           <br>
         </div>

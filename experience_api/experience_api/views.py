@@ -14,7 +14,7 @@ def home(request):
 			author_id = str(post['fields']['author'])
 			author_response = requests.get('http://models-api:8000/api/v1/users/' + author_id)
 			author_response_json = json.loads(author_response.json())[0]
-			post['fields']['author'] = author_response_json['fields']['first_name'] + ' ' + author_response_json['fields']['last_name']
+			post['fields']['author_name'] = author_response_json['fields']['first_name'] + ' ' + author_response_json['fields']['last_name']
 		response_json = json.dumps(response_jsonified)
 		return JsonResponse(response_json, safe=False)
 	return JsonResponse({ 'success': False })
