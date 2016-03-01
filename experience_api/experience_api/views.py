@@ -21,8 +21,22 @@ def home(request):
 
 def post(request, post_id):
 	if request.method == 'GET':
-		url = 'http://models-api:8000/api/v1/posts/' + str(post_id)
-		response = requests.get(url)
-		return JsonResponse(response.json(), safe=False)
+		post_url = 'http://models-api:8000/api/v1/posts/' + str(post_id)
+		comments_url = 'http://models-api:8000/api/v1/comments/post/' + str(post_id)
+
+		post_raw = requests.get(post_url)
+		comments_raw = requests.get(comments_url)
+
+		post_json = post_raw.json()
+		comments_json = comments_raw.json()
+
+		post_jsonified = json.loads(post_json)
+		comments_jsonified = json.loads(comments_json)
+
+		post_jsonified['fields']['comments'] = []
+		for comment in comments_jsonified:
+			post_json['fields']['comments'].append(comment)
+
+		return JsonResponse(json.dumps(post_jsonified), safe=False)
 		#return JsonResponse(response.json(), safe=False)
 	return JsonResponse({ 'success': False })
