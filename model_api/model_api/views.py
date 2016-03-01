@@ -135,6 +135,14 @@ def comments(request, comment_id=-1):
         return JsonResponse({ 'success': True })
 
 @csrf_exempt
+def post_comments(request, post_id=-1):
+    try:
+        post = Post.objects.get(pk=post_id)
+        return JsonResponse(serializers.serialize('json', [post.comment_set]), safe=False)
+    except Post.DoesNotExist:
+        return JsonResponse({ 'success': False, 'reponse': 'No post with that id exists' })
+
+@csrf_exempt
 def create_comment(request):
     if 'blog_post_id' not in request.POST or 'author_id' not in request.POST or 'text' not in request.POST:
         return JsonResponse({ 'success': False, 'response': 'Missing required field(s)' })
