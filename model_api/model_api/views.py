@@ -143,6 +143,18 @@ def create_comment(request):
     comment.save()
     return JsonResponse({ 'success': True, 'blog_post_id': request.POST['blog_post_id'], 'author_id': request.POST['author_id'], 'text': request.POST['text'] })
 
+def get_comment_by_post(request):
+    if request.method == 'GET':
+        request.GET.get('post_id')
+        if comment_id == -1:
+            return JsonResponse(serializers.serialize('json', Comment.objects.all()), safe=False)
+        else:
+            try:
+                comments = Comment.objects.get(post_id=post_id)
+                return JsonResponse(serializers.serialize('json', comments), safe=False)
+            except Comment.DoesNotExist:
+                return JsonResponse({ 'success': False, 'reponse': 'No comment with that id exists' })
+    return JsonResponse({ 'success': False, 'reponse': 'No comment with that id exists' })
 
 def test(request):
     return JsonResponse({ 'success': True })

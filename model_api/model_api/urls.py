@@ -28,9 +28,12 @@ urlpatterns = [
     url(r'^api/v1/posts/new$', views.create_post),
     url(r'^api/v1/posts/(?P<post_id>[0-9]+)$', views.posts),
 
+
     url(r'^api/v1/comments$', views.comments),
     url(r'^api/v1/comments/new$', views.create_comment),
     url(r'^api/v1/comments/(?P<comment_id>[0-9]+)$', views.comments),
+    url(r'^api/v1/comments/$', views.get_comment_by_post),
+
 
     url(r'^$', views.test),
 ]

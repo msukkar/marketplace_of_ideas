@@ -23,8 +23,10 @@ def post(request, post_id):
 	if request.method == 'GET':
 		url = 'http://exp-api:8000/experience/v1/post/' + str(post_id)
 		response = requests.get(url)
+	
 		#return HttpResponse(response.text)
 		context = {
+			# 'response': json.loads(response.json())
 			'response': json.loads(response.json())
 		}
 		template = loader.get_template('frontend/detail.html')
