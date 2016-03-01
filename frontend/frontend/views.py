@@ -12,7 +12,7 @@ def home(request):
 		response = requests.get('http://exp-api:8000/experience/v1/home')
 		# Probably rearrange based on popularity, time, etc
 		context = {
-			'response': response.json()
+			'response': json.loads(response.json())
 		}
 		template = loader.get_template('frontend/start.html')
 		return HttpResponse(template.render(context, request))
