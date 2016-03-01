@@ -111,7 +111,12 @@ def create_post(request):
 @csrf_exempt
 def comments(request, comment_id=-1):
     if request.method == 'GET':
+        post_id = request.GET.get('post_id', '-1')
+
         if comment_id == -1:
+            if post_id != '-1':
+                comments = Comment.objects.all().filter(blog_post=post_id)
+                return JsonResponse(serializers.serialize('json', comments), safe=False)
             return JsonResponse(serializers.serialize('json', Comment.objects.all()), safe=False)
         else:
             try:
@@ -145,7 +150,7 @@ def create_comment(request):
 
 def get_comment_by_post(request):
     if request.method == 'GET':
-        request.GET.get('post_id')
+        post_id = request.GET.get('post_id')
         if comment_id == -1:
             return JsonResponse(serializers.serialize('json', Comment.objects.all()), safe=False)
         else:
