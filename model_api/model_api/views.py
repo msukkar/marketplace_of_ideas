@@ -23,10 +23,14 @@ def users(request, user_id=-1):
                 return JsonResponse({ 'success': True, 'id': user_id, 'username': request.POST['username'], 'first_name': request.POST['first_name'], 'last_name': request.POST['last_name'] })
             except User.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No user with that id exists' })
+        return JsonResponse({ 'success': False, 'response': 'No id specified' })
     elif request.method == 'DELETE':
-        user=User.objects.get(id=user_id);
-        user.delete()
-        return JsonResponse({ 'success': True, 'user': user_id })
+        try:
+            user = User.objects.get(pk=user_id)
+            user.delete()
+            return JsonResponse({ 'success': True, 'user': user_id })
+        except User.DoesNotExist:
+            return JsonResponse({ 'success': False, 'response': 'No user with that id exists' })
 
 @csrf_exempt
 def create_user(request):
@@ -57,11 +61,14 @@ def transactions(request, transaction_id=-1):
                 return JsonResponse({ 'success': True, 'id': transaction_id, 'payer_id': request.POST['payer_id'], 'receiver_id': request.POST['receiver_id'], 'amount': request.POST['amount'] })
             except Transaction.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No transaction with that id exists' })
-        return JsonReponse({ 'success': False, 'response': 'No id specified' })
+        return JsonResponse({ 'success': False, 'response': 'No id specified' })
     elif request.method == 'DELETE':
-        transaction=Transaction.objects.get(id=transaction_id);
-        transaction.delete()
-        return JsonResponse({ 'success': True, 'id': transaction_id })
+        try:
+            transaction = Transaction.objects.get(pk=transaction_id)
+            transaction.delete()
+            return JsonResponse({ 'success': True, 'id': transaction_id })
+        except Transaction.DoesNotExist:
+            return JsonResponse({ 'success': False, 'response': 'No transaction with that id exists' })
 
 @csrf_exempt
 def create_transaction(request):
@@ -92,11 +99,14 @@ def posts(request, post_id=-1):
                 return JsonResponse({ 'success': True, 'id': post_id, 'title': request.POST['title'], 'body': request.POST['body'], 'author': request.POST['author_id'] })
             except BlogPost.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No blog post with that id exists' })
-        return JsonReponse({ 'success': False, 'response': 'No id specified' })
+        return JsonResponse({ 'success': False, 'response': 'No id specified' })
     elif request.method == 'DELETE':
-        post = Post.objects.get(pk=post_id);
-        post.delete()
-        return JsonResponse({ 'success': True, 'id': post_id })
+        try:
+            blog_post = BlogPost.objects.get(pk=post_id)
+            blog_post.delete()
+            return JsonResponse({ 'success': True, 'id': post_id })
+        except BlogPost.DoesNotExist:
+            return JsonResponse({ 'success': False, 'response': 'No blog post with that id exists' })
 
 @csrf_exempt
 def create_post(request):
@@ -123,7 +133,7 @@ def comments(request, comment_id=-1):
                 comment = Comment.objects.get(pk=comment_id)
                 return JsonResponse(serializers.serialize('json', [comment]), safe=False)
             except Comment.DoesNotExist:
-                return JsonResponse({ 'success': False, 'reponse': 'No comment with that id exists' })
+                return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
     elif request.method == 'POST':
         if not comment_id == -1:
             try:
@@ -135,9 +145,12 @@ def comments(request, comment_id=-1):
                 return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
         return JsonResponse({ 'success': False, 'response': 'No id specified' })
     elif request.method == 'DELETE':
-        comment = Comment.objects.get(pk=comment_id);
-        comment.delete();
-        return JsonResponse({ 'success': True })
+        try:
+            comment = Comment.objects.get(pk=comment_id)
+            comment.delete();
+            return JsonResponse({ 'success': True })
+        except Comment.DoesNotExist:
+            return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
 
 @csrf_exempt
 def create_comment(request):
@@ -148,18 +161,18 @@ def create_comment(request):
     comment.save()
     return JsonResponse({ 'success': True, 'blog_post_id': request.POST['blog_post_id'], 'author_id': request.POST['author_id'], 'text': request.POST['text'] })
 
-def get_comment_by_post(request):
-    if request.method == 'GET':
-        post_id = request.GET.get('post_id')
-        if comment_id == -1:
-            return JsonResponse(serializers.serialize('json', Comment.objects.all()), safe=False)
-        else:
-            try:
-                comments = Comment.objects.get(post_id=post_id)
-                return JsonResponse(serializers.serialize('json', comments), safe=False)
-            except Comment.DoesNotExist:
-                return JsonResponse({ 'success': False, 'reponse': 'No comment with that id exists' })
-    return JsonResponse({ 'success': False, 'reponse': 'No comment with that id exists' })
+# def get_comment_by_post(request):
+#     if request.method == 'GET':
+#         post_id = request.GET.get('post_id')
+#         if comment_id == -1:
+#             return JsonResponse(serializers.serialize('json', Comment.objects.all()), safe=False)
+#         else:
+#             try:
+#                 comments = Comment.objects.filter(post_id=post_id)
+#                 return JsonResponse(serializers.serialize('json', comments), safe=False)
+#             except Comment.DoesNotExist:
+#                 return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
+#     return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
 
 def test(request):
     return JsonResponse({ 'success': True })
