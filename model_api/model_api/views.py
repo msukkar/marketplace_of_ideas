@@ -59,7 +59,7 @@ def users(request, user_id=-1):
                                         'success': False,                           \
                                         'response': 'No user with that id exists'   \
                                     })
-        return JsonResponse({}
+        return JsonResponse({
                                 'success': False,               \
                                 'response': 'No id specified'   \
                             })
