@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from model_api.models import *
 from django.views.decorators.csrf import csrf_exempt
@@ -7,11 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 def users(request, user_id=-1):
     if request.method == 'GET':
         if user_id == -1:
-            return JsonResponse(serializers.serialize('json', User.objects.all()), safe=False)
+            return JsonResponse({ 'success': True, 'response': serializers.serialize('json', User.objects.all()) }, safe=False)
         else:
             try:
                 user = User.objects.get(pk=user_id)
-                return JsonResponse(serializers.serialize('json', [user]), safe=False)
+                return JsonResponse({ 'success': True, 'response': serializers.serialize('json', [user]) }, safe=False)
             except User.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No user with that id exists' })
     elif request.method == 'POST':
@@ -45,11 +45,11 @@ def create_user(request):
 def transactions(request, transaction_id=-1):
     if request.method == 'GET':
         if transaction_id == -1:
-            return JsonResponse(serializers.serialize('json', Transaction.objects.all()), safe=False)
+            return JsonResponse({ 'success': True, 'response': serializers.serialize('json', Transaction.objects.all()) }, safe=False)
         else:
             try:
                 transaction = Transaction.objects.get(pk=transaction_id)
-                return JsonResponse(serializers.serialize('json', [transaction]), safe=False)
+                return JsonResponse({ 'success': True, 'response': serializers.serialize('json', [transaction]) }, safe=False)
             except Transaction.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No transaction with that id exists' })
     elif request.method == 'POST':
@@ -83,11 +83,11 @@ def create_transaction(request):
 def posts(request, post_id=-1):
     if request.method == 'GET':
         if post_id == -1:
-            return JsonResponse(serializers.serialize('json', BlogPost.objects.all()), safe=False)
+            return JsonResponse({ 'success': True, 'response': serializers.serialize('json', BlogPost.objects.all()) }, safe=False)
         else:
             try:
                 blog_post = BlogPost.objects.get(pk=post_id)
-                return JsonResponse(serializers.serialize('json', [blog_post]), safe=False)
+                return JsonResponse({ 'success': True, 'response': serializers.serialize('json', [blog_post])}, safe=False)
             except BlogPost.DoesNotExist:
                 return JsonResponse({ 'success': False, 'response': 'No blog post with that id exists' })
     elif request.method == 'POST':
@@ -160,19 +160,6 @@ def create_comment(request):
     comment = Comment(blog_post_id=request.POST['blog_post_id'], author_id=request.POST['author_id'], text=request.POST['text'])
     comment.save()
     return JsonResponse({ 'success': True, 'blog_post_id': request.POST['blog_post_id'], 'author_id': request.POST['author_id'], 'text': request.POST['text'] })
-
-# def get_comment_by_post(request):
-#     if request.method == 'GET':
-#         post_id = request.GET.get('post_id')
-#         if comment_id == -1:
-#             return JsonResponse(serializers.serialize('json', Comment.objects.all()), safe=False)
-#         else:
-#             try:
-#                 comments = Comment.objects.filter(post_id=post_id)
-#                 return JsonResponse(serializers.serialize('json', comments), safe=False)
-#             except Comment.DoesNotExist:
-#                 return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
-#     return JsonResponse({ 'success': False, 'response': 'No comment with that id exists' })
 
 def test(request):
     return JsonResponse({ 'success': True })

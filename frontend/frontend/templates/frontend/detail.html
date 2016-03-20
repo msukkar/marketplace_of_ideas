@@ -4,14 +4,13 @@
 	<h1> Detail View <h1>
 	{% if response %}
 		{% for blog in response %}
-			<h1> Here's a blog post </h1>
-			<h1> {{ blog.pk }} </h1>
-			<h5> {{ blog.fields.title }} </h5>
-			<h5> {{ blog.fields.body }} </h5>	
+			<h1> {{ blog.fields.title }} </h1>
+			<h3> by {{ blog.fields.author_name }} </h3>
+			<h5> {{ blog.fields.body }} </h5>
 			<br/>
 			<h2> Comments </h2>
 			{%for comment in blog.fields.comments%}	
-				<h5> {{comment.fields.author}}</h5>	
+				<h5> {{comment.fields.author_name}}</h5>
 				<p> {{comment.fields.text}} </p>
 			{%endfor%}
 		{% endfor %}

@@ -9,14 +9,14 @@ def home(request):
 		response = requests.get('http://models-api:8000/api/v1/posts')
 		# Probably rearrange based on popularity, time, etc
 		response_json = response.json()
-		response_jsonified = json.loads(response_json)
+		response_jsonified = json.loads(response_json['response'])
 		for post in response_jsonified:
-			author_id = str(post['fields']['author'])
-			author_response = requests.get('http://models-api:8000/api/v1/users/' + author_id)
-			author_response_json = json.loads(author_response.json())[0]
+			author_id = post['fields']['author']
+			author_response = requests.get('http://models-api:8000/api/v1/users/' + str(author_id))
+			author_response_json = json.loads(author_response.json()['response'])[0]
 			post['fields']['author_name'] = author_response_json['fields']['first_name'] + ' ' + author_response_json['fields']['last_name']
 		response_json = json.dumps(response_jsonified)
-		return JsonResponse(response_json, safe=False)
+		return JsonResponse({ 'success': True, 'data': response_json }, safe=False)
 	return JsonResponse({ 'success': False })
 
 def post(request, post_id):
@@ -25,18 +25,24 @@ def post(request, post_id):
 		response = requests.get(url)
 
 		response_json = response.json()
-		response_object = json.loads(response_json)
-		for post in response_object:
-			post_id = str(post['pk'])
-			comments = requests.get('http://models-api:8000/api/v1/comments?post_id=' + post_id)
-			comments_object = json.loads(comments.json())
-			for comment in comments_object:
-				author_id = str(comment['fields']['author'])
-				author_response = requests.get('http://models-api:8000/api/v1/users/' + author_id)
-				author_response_json = json.loads(author_response.json())[0]
-				comment['fields']['author'] = author_response_json['fields']['first_name'] + ' ' + author_response_json['fields']['last_name']
-			post['fields']['comments'] = comments_object
-		response_json = json.dumps(response_object)
-		return JsonResponse(response_json, safe=False)
+
+		if response_json['success']:
+			posts_json = json.loads(response_json['response'])
+			for post in posts_json:
+				author_id = post['fields']['author']
+				author_response = requests.get('http://models-api:8000/api/v1/users/' + str(author_id))
+				author_response_json = json.loads(author_response.json()['response'])[0]
+				post['fields']['author_name'] = author_response_json['fields']['first_name'] + ' ' + author_response_json['fields']['last_name']
+
+				post_id = post['pk']
+				comments = requests.get('http://models-api:8000/api/v1/comments?post_id=' + str(post_id))
+				comments_object = json.loads(comments.json())
+				for comment in comments_object:
+					author_id = comment['fields']['author']
+					author_response = requests.get('http://models-api:8000/api/v1/users/' + str(author_id))
+					author_response_json = json.loads(author_response.json()['response'])[0]
+					comment['fields']['author_name'] = author_response_json['fields']['first_name'] + ' ' + author_response_json['fields']['last_name']
+				post['fields']['comments'] = comments_object
+			return JsonResponse({ 'success': True, 'data': json.dumps(posts_json)})
 		#return JsonResponse(response.json(), safe=False)
-	return JsonResponse({ 'success': False })
+	return JsonResponse({ 'success': False, 'response': 'No post with specified id' })
