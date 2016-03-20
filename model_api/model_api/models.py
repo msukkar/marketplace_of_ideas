@@ -12,7 +12,7 @@ class User(models.Model):
 
 class Authenticator(models.Model):
 	authenticator = models.CharField(max_length=255, primary_key=True)
-	user_id = models.CharField(max_length=50)
+	user_id = models.IntegerField()
 	date_created = models.DateTimeField(
 		auto_now_add=True
 	)
