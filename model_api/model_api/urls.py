@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^api/v1/users$', views.users),
     url(r'^api/v1/users/new$', views.create_user),
     url(r'^api/v1/users/(?P<user_id>[0-9]+)$', views.users),
+    url(r'^api/v1/users/sign_in$', views.sign_in),
+    url(r'^api/v1/users/sign_out$', views.sign_out),
 
     url(r'^api/v1/transactions$', views.transactions),
     url(r'^api/v1/transactions/new$', views.create_transaction),

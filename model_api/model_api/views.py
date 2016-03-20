@@ -73,6 +73,57 @@ def users(request, user_id=-1):
             return JsonResponse({ 'success': False, 'response': 'No user with that id exists' })
 
 @csrf_exempt
+def sign_in(request):
+    if 'username' not in request.POST or \
+       'password' not in request.POST:
+        return JsonResponse({
+                                'success': False,                       \
+                                'response': 'Missing required field(s)' \
+                            })
+
+    user = User.objects.get(username=request.POST['username'])
+    if hashers.check_password(request.POST['password'], user.password):
+        authenticator = hmac.new(key = settings.SECRET_KEY.encode('utf-8'), msg = os.urandom(32)).hexdigest()
+        authenticator = Authenticator(
+            user_id=user.id,
+            authenticator=authenticator
+            )
+        try:
+            authenticator.save()
+        except db.Error:
+            return JsonResponse({ 'success': False, 'response': 'db error' })
+        return JsonResponse({
+                                'success': True,                       \
+                                'authenticator': authenticator.authenticator \
+                            })
+    else:
+        return JsonResponse({
+                                'success': False,                       \
+                                'response': 'Invalid username and password combination' \
+                            })
+
+@csrf_exempt
+def sign_out(request):
+    if 'authenticator' not in request.POST:
+        return JsonResponse({
+                                'success': False,                       \
+                                'response': 'Missing required field(s)' \
+                            })
+
+    try:
+        authenticator = Authenticator.objects.get(authenticator = request.POST['authenticator'])
+        authenticator.delete()
+        return JsonResponse({
+                                'success': True,                       \
+                                'response': 'Successfully signed out' \
+                            })
+    except Authenticator.DoesNotExist:
+        return JsonResponse({
+                                'success': False,                                   \
+                                'response': 'No authenticator with that authenticator exists'    \
+                            })
+
+@csrf_exempt
 def create_user(request):
     if 'username' not in request.POST or    \
        'first_name' not in request.POST or  \
