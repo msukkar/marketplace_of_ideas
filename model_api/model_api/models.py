@@ -4,7 +4,7 @@ class User(models.Model):
 	username = models.CharField(max_length=50)
 	first_name = models.CharField(max_length=50)
 	last_name = models.CharField(max_length=50)
-	password = models.TextField(max_length=96)
+	password = models.CharField(max_length=96)
 	followed_people = models.ManyToManyField('self', related_name='follows', symmetrical=False)
 	# date_created = models.DateTimeField(
 	# 	auto_now_add=True

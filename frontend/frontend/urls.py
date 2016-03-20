@@ -16,6 +16,7 @@ from django.conf.urls import include, url
 from frontend import views
 
 urlpatterns = [
-	url(r'^home', views.home),
+	url(r'^home$', views.home),
 	url(r'^post/(?P<post_id>[0-9]+)$', views.post, name = 'blog_post'),
+	url(r'^post/new$', views.new_blogpost, name='new_blogpost'),
 ]

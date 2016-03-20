@@ -2,6 +2,7 @@
 
 {% block content %}
     <h4><small>RECENT POSTS</small></h4>
+    <a href= "{% url 'new_blogpost' %}"><h4><small> Submit a post! </small></h4></a>
     <hr>
     {% if response %}
       {% for blog in response %}

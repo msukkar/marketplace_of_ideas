@@ -46,3 +46,23 @@ def post(request, post_id):
 			return JsonResponse({ 'success': True, 'data': json.dumps(posts_json)})
 		#return JsonResponse(response.json(), safe=False)
 	return JsonResponse({ 'success': False, 'response': 'No post with specified id' })
+
+@csrf_exempt
+def new_post(request):
+	if request.method == 'POST':
+		url = 'http://models-api:8000/api/v1/posts/new'
+
+		response = requests.post(
+			url,
+			data = {
+				'author_id': request.POST['author_id'],
+				'title': request.POST['title'],
+				'body': request.POST['body'],
+			},
+		)
+
+		if response and response.json()['success']:
+			return JsonResponse({ 'success': True, 'response': 'Successfully added a new post' })
+		else:
+			return HttpResponse(response.json()['response'])
+

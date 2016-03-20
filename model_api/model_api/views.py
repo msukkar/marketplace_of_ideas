@@ -88,7 +88,7 @@ def create_user(request):
     user = User(username=request.POST['username'],              \
                 first_name=request.POST['first_name'],          \
                 last_name=request.POST['last_name'],            \
-                password=password
+                password=password                               \
                 )
 
     try:
