@@ -39,6 +39,23 @@ def post(request, post_id):
 
 	return JsonResponse({ 'success': False })
 
+
+# def create_listing(request):
+#     auth = request.COOKIES.get('auth')
+#     if not auth:
+#       # handle user not logged in while trying to create a listing
+#       return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing")
+#     if request.method == 'GET':
+#       return render("create_listing.html", ...)
+#     f = create_listing_form(request.POST)
+#     ...
+#     resp = create_listing_exp_api(auth, ...)
+#     if resp and not resp['ok']:
+#         if resp['error'] == exp_srvc_errors.E_UNKNOWN_AUTH:
+#             # exp service reports invalid authenticator -- treat like user not logged in
+#             return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing")
+#      ...
+#      return render("create_listing_success.html", ...)
 def new_blogpost(request):
 	if request.method == 'POST':
 		form = BlogPostForm(request.POST)
@@ -68,9 +85,10 @@ def new_blogpost(request):
 
 def login(request):
     if request.method == 'GET':
+      form = LoginForm()
       next = request.GET.get('next') or reverse('home')
-      return render(request, 'frontend/login.html', {'next': next})
-    f = login_form(request.POST)
+      return render(request, 'frontend/login.html', {'next': next, 'form': form})
+    f = LoginForm(request.POST)
     if not f.is_valid():
       error = 'invalid entry'
       # bogus form post, send them back to login page and show them an error
@@ -78,7 +96,13 @@ def login(request):
     username = f.cleaned_data['username']
     password = f.cleaned_data['password']
     next = f.cleaned_data.get('next') or reverse('home')
-    resp = login_exp_api (username, password)
+    resp = requests.post(
+		'http://exp-api:8000/experience/v1/login',
+		data = {
+			'username': username,
+			'password': password,
+		}
+    ) 
     if not resp or not resp['ok']:
       error = "invalid login credentials"
       # couldn't log them in, send them back to login page with error
@@ -87,21 +111,5 @@ def login(request):
     authenticator = resp['resp']['authenticator']
     response = HttpResponseRedirect(next)
     response.set_cookie("auth", authenticator)
-    return response
+    return render(response)
 
-# def create_listing(request):
-#     auth = request.COOKIES.get('auth')
-#     if not auth:
-#       # handle user not logged in while trying to create a listing
-#       return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing")
-#     if request.method == 'GET':
-#       return render("create_listing.html", ...)
-#     f = create_listing_form(request.POST)
-#     ...
-#     resp = create_listing_exp_api(auth, ...)
-#     if resp and not resp['ok']:
-#         if resp['error'] == exp_srvc_errors.E_UNKNOWN_AUTH:
-#             # exp service reports invalid authenticator -- treat like user not logged in
-#             return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing")
-#      ...
-#      return render("create_listing_success.html", ...)

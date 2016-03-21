@@ -1,7 +1,9 @@
 {% extends "frontend/base.html" %}
 
 {% block content %}
-<input type = "text" placeholder="email">
-<input class = "pass" type = "password" placeholder = "password">
-<input class = "btn" type = "submit" value = "Sign in">
+	<form action="/login" method="post">
+		{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="Submit" />
+	</form>
 {% endblock %}
