@@ -1,6 +1,7 @@
 {% extends "frontend/base.html" %}
 
 {% block content %}
+	<h1>Login</h1>
 	<form action="/login" method="post">
 		{% csrf_token %}
 		{{ form }}

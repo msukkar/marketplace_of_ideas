@@ -6,7 +6,7 @@ from django.template import loader
 from django.core.urlresolvers import reverse
 import requests
 import json
-from .forms import LoginForm, BlogPostForm
+from .forms import LoginForm, BlogPostForm, SignupForm
 
 @csrf_exempt
 def home(request):
@@ -88,32 +88,56 @@ def new_blogpost(request):
 	return render(request, 'frontend/new_blogpost.html', {'form': form})
 
 def login(request):
-    blank_form = LoginForm()
-    if request.method == 'GET':
-      next = request.GET.get('next') or reverse('home')
-      return render(request, 'frontend/login.html', {'next': next, 'form': blank_form})
-    f = LoginForm(request.POST)
-    if not f.is_valid():
-      error = 'invalid entry'
-      # bogus form post, send them back to login page and show them an error
-      return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
-    username = f.cleaned_data['username']
-    password = f.cleaned_data['password']
-    next = f.cleaned_data.get('next') or reverse('home')
-    resp = requests.post(
+	blank_form = LoginForm()
+	if request.method == 'GET':
+	  next = request.GET.get('next') or reverse('home')
+	  return render(request, 'frontend/login.html', {'next': next, 'form': blank_form})
+	f = LoginForm(request.POST)
+	if not f.is_valid():
+	  error = 'invalid entry'
+	  # bogus form post, send them back to login page and show them an error
+	  return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
+	username = f.cleaned_data['username']
+	password = f.cleaned_data['password']
+	next = f.cleaned_data.get('next') or reverse('home')
+	resp = requests.post(
 		'http://exp-api:8000/experience/v1/login',
 		data = {
 			'username': username,
 			'password': password,
 		}
-    ) 
-    if not resp or not resp['ok']:
-      error = "invalid login credentials"
-      # couldn't log them in, send them back to login page with error
-      return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
-    # logged them in. set their login cookie and redirect to back to wherever they came from
-    authenticator = resp['resp']['authenticator']
-    response = HttpResponseRedirect(next)
-    response.set_cookie("auth", authenticator)
-    return render(response)
+	) 
+	if not resp or not resp['ok']:
+	  error = "invalid login credentials"
+	  # couldn't log them in, send them back to login page with error
+	  return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
+	# logged them in. set their login cookie and redirect to back to wherever they came from
+	authenticator = resp['resp']['authenticator']
+	response = HttpResponseRedirect(next)
+	response.set_cookie("auth", authenticator)
+	return render(response)
+
+def signup(request):
+	blank_form = SignupForm()
+	if request.method == 'GET':
+		return render (request, 'frontend/signup.html', {'form': blank_form})
+	form = SignupForm(request.POST)
+	if not form.is_valid():
+		error = 'invalid entry'
+		return render(request, 'frontend/signup.html', {'error':error, 'form':blank_form})
+	username = f.cleaned_data['username']
+	password = f.cleaned_data['password']
+	resp = requests.post(
+		'http://exp-api:8000/experience/v1/signup',
+		data = {
+			'username': username,
+			'password': password,
+		}
+	) 
+	if not resp or not resp['ok']:
+		error = "couldn't create account"
+		return render(request, 'frontend/signup.html', {'error':error, 'form':blank_form})
+	response = HttpResponseRedirect('frontend/login.html')
+	return render(response)
+
 

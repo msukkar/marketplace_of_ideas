@@ -1,5 +1,10 @@
 {% extends "frontend/base.html" %}
 
 {% block content %}
-
+	<h1> Signup</h1>
+	<form action="/post/new" method="post">
+		{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="Sign up" />
+	</form>
 {% endblock %}
