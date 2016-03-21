@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
+from django.core.urlresolvers import reverse
 import requests
 import json
 from .forms import LoginForm, BlogPostForm
@@ -65,26 +66,28 @@ def new_blogpost(request):
 
 	return render(request, 'frontend/new_blogpost.html', {'form': form})
 
-# def login(request):
-#     if request.method == 'GET':
-#       next = request.GET.get('next') or reverse('home')
-#       return render('login.html', ...)
-#     f = login_form(request.POST)
-#     if not f.is_valid():
-#       # bogus form post, send them back to login page and show them an error
-#       return render('login.html', ...)
-#     username = f.cleaned_data['username']
-#     password = f.clearned_data['password']
-#     next = f.cleaned_data.get('next') or reverse('home')
-#     resp = login_exp_api (username, password)
-#     if not resp or not resp['ok']:
-#       # couldn't log them in, send them back to login page with error
-#       return render('login.html', ...)
-#     # logged them in. set their login cookie and redirect to back to wherever they came from
-#     authenticator = resp['resp']['authenticator']
-#     response = HttpResponseRedirect(next)
-#     response.set_cookie("auth", authenticator)
-#     return response
+def login(request):
+    if request.method == 'GET':
+      next = request.GET.get('next') or reverse('home')
+      return render(request, 'frontend/login.html', {'next': next})
+    f = login_form(request.POST)
+    if not f.is_valid():
+      error = 'invalid entry'
+      # bogus form post, send them back to login page and show them an error
+      return render(request, 'frontend/login.html', {'error':error})
+    username = f.cleaned_data['username']
+    password = f.cleaned_data['password']
+    next = f.cleaned_data.get('next') or reverse('home')
+    resp = login_exp_api (username, password)
+    if not resp or not resp['ok']:
+      error = "invalid login credentials"
+      # couldn't log them in, send them back to login page with error
+      return render(request, 'frontend/login.html', {'error':error})
+    # logged them in. set their login cookie and redirect to back to wherever they came from
+    authenticator = resp['resp']['authenticator']
+    response = HttpResponseRedirect(next)
+    response.set_cookie("auth", authenticator)
+    return response
 
 # def create_listing(request):
 #     auth = request.COOKIES.get('auth')
