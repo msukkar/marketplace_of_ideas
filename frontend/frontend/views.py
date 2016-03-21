@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.core.urlresolvers import reverse
@@ -57,6 +57,9 @@ def post(request, post_id):
 #      ...
 #      return render("create_listing_success.html", ...)
 def new_blogpost(request):
+	auth = request.COOKIES.get('auth')
+	if not auth:
+		return HttpResponseRedirect(reverse("login") + "?next=" + reverse("new_blogpost"))
 	if request.method == 'POST':
 		form = BlogPostForm(request.POST)
 
@@ -75,7 +78,8 @@ def new_blogpost(request):
 
 			if response and response.json()['success']:
 				return HttpResponse("We created the post!!")
-
+			elif resp['error']:
+				return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing"))
 			return HttpResponse("You submitted data" + title + " " + body)
 
 	else:
@@ -84,15 +88,15 @@ def new_blogpost(request):
 	return render(request, 'frontend/new_blogpost.html', {'form': form})
 
 def login(request):
+    blank_form = LoginForm()
     if request.method == 'GET':
-      form = LoginForm()
       next = request.GET.get('next') or reverse('home')
-      return render(request, 'frontend/login.html', {'next': next, 'form': form})
+      return render(request, 'frontend/login.html', {'next': next, 'form': blank_form})
     f = LoginForm(request.POST)
     if not f.is_valid():
       error = 'invalid entry'
       # bogus form post, send them back to login page and show them an error
-      return render(request, 'frontend/login.html', {'error':error})
+      return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
     username = f.cleaned_data['username']
     password = f.cleaned_data['password']
     next = f.cleaned_data.get('next') or reverse('home')
@@ -106,7 +110,7 @@ def login(request):
     if not resp or not resp['ok']:
       error = "invalid login credentials"
       # couldn't log them in, send them back to login page with error
-      return render(request, 'frontend/login.html', {'error':error})
+      return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
     # logged them in. set their login cookie and redirect to back to wherever they came from
     authenticator = resp['resp']['authenticator']
     response = HttpResponseRedirect(next)
