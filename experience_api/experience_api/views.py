@@ -65,3 +65,38 @@ def new_post(request):
 			return JsonResponse({ 'success': True, 'response': 'Successfully added a new post' })
 		else:
 			return HttpResponse(response.json()['response'])
+
+@csrf_exempt
+def sign_in(request):
+	if request.method == 'POST':
+		url = 'http://models-api:8000/api/v1/users/sign_in'
+		response = requests.post(
+			url,
+			data = {
+				'username': request.POST['username'],
+				'password': request.POST['password'],
+			},
+		)
+		if response and response.json()['success']:
+			return JsonResponse({ 'success': True, 'response': response.json()['authenticator']})
+		else:
+			return HttpResponse(response.json()['response'])
+
+@csrf_exempt
+def sign_up (request):
+	if request.method == 'POST':
+		url = 'http://models-api:8000/api/v1/users/new'
+		response = requests.post(
+			url,
+			data = {
+				'username': request.POST['username'],
+				'first_name': request.POST['first_name'],
+				'last_name':request.POST['last_name'],
+				'password': request.POST['password'],
+			},
+		)
+
+		if response and response.json()['success']:
+			return JsonResponse({ 'success': True, 'response': 'ok'})
+		else:
+			return HttpResponse(response)

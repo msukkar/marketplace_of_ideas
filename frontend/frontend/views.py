@@ -101,7 +101,7 @@ def login(request):
 	password = f.cleaned_data['password']
 	next = f.cleaned_data.get('next') or reverse('home')
 	resp = requests.post(
-		'http://exp-api:8000/experience/v1/login',
+		'http://exp-api:8000/experience/v1/sign_in',
 		data = {
 			'username': username,
 			'password': password,
@@ -127,10 +127,14 @@ def signup(request):
 		return render(request, 'frontend/signup.html', {'error':error, 'form':blank_form})
 	username = f.cleaned_data['username']
 	password = f.cleaned_data['password']
+	first_name = f.cleaned_data['first_name']
+	last_name = f.cleaned_data['last_name']
 	resp = requests.post(
-		'http://exp-api:8000/experience/v1/signup',
+		'http://exp-api:8000/experience/v1/sign_up',
 		data = {
 			'username': username,
+			'first_name': first_name,
+			'last_name': last_name,
 			'password': password,
 		}
 	) 

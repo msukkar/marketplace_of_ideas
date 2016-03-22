@@ -91,7 +91,7 @@ def sign_in(request):
         try:
             authenticator.save()
         except db.Error:
-            return JsonResponse({ 'success': False, 'response': 'db error' })
+            return JsonResponse({ 'success': False, 'response':  db.Error })
         return JsonResponse({
                                 'success': True,                       \
                                 'authenticator': authenticator.authenticator \
@@ -145,7 +145,7 @@ def create_user(request):
     try:
         user.save()
     except db.Error:
-        return JsonResponse({ 'success': False, 'response': 'db error' })
+        return JsonResponse({ 'success': False, 'response':  db.Error })
 
     return JsonResponse({ 
                             'success': True,                            \

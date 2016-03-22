@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^experience/v1/home$', views.home),
     url(r'^experience/v1/post/(?P<post_id>[0-9]+)$', views.post),
     url(r'^experience/v1/post/new$', views.new_post),
+    url(r'^experience/v1/sign_in$', views.sign_in),
+    url(r'^experience/v1/sign_up$', views.sign_up),
 ]
