@@ -10,7 +10,7 @@ models:
         - "8001:8000"
     volumes:
         - ./model_api:/app
-    command: bash -c "python /app/manage.py migrate && python /app/manage.py loaddata /app/fixtures/data.json && mod_wsgi-express start-server --reload-on-changes model_api/wsgi.py"  
+    command: bash -c "python /app/manage.py migrate && mod_wsgi-express start-server --reload-on-changes model_api/wsgi.py"  
 exp:
     image: tp33/django:1.2
     links:

@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^experience/v1/post/new$', views.new_post),
     url(r'^experience/v1/sign_in$', views.sign_in),
     url(r'^experience/v1/sign_up$', views.sign_up),
+    url(r'^experience/v1/sign_out$', views.sign_out),
 ]

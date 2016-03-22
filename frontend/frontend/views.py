@@ -72,12 +72,12 @@ def new_blogpost(request):
 				data = {
 					'title': title,
 					'body': body,
-					'author_id': 1,
+					'authenticator': auth,
 				}
 			)
 
 			if response and response.json()['success']:
-				return HttpResponse("We created the post!!")
+				return HttpResponseRedirect(reverse('home'))
 			elif resp['error']:
 				return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing"))
 			return HttpResponse("You submitted data" + title + " " + body)
@@ -107,22 +107,22 @@ def login(request):
 			'password': password,
 		}
 	) 
-	if not resp or not resp['ok']:
+	if not resp or not resp.json()['success']:
 	  error = "invalid login credentials"
 	  # couldn't log them in, send them back to login page with error
 	  return render(request, 'frontend/login.html', {'error':error, 'form':blank_form})
 	# logged them in. set their login cookie and redirect to back to wherever they came from
-	authenticator = resp['resp']['authenticator']
+	authenticator = resp.json()['response']
 	response = HttpResponseRedirect(next)
-	response.set_cookie("auth", authenticator)
-	return render(response)
+	response.set_cookie('auth', authenticator)
+	return response
 
 def signup(request):
 	blank_form = SignupForm()
 	if request.method == 'GET':
 		return render (request, 'frontend/signup.html', {'form': blank_form})
-	form = SignupForm(request.POST)
-	if not form.is_valid():
+	f = SignupForm(request.POST)
+	if not f.is_valid():
 		error = 'invalid entry'
 		return render(request, 'frontend/signup.html', {'error':error, 'form':blank_form})
 	username = f.cleaned_data['username']
@@ -138,10 +138,37 @@ def signup(request):
 			'password': password,
 		}
 	) 
-	if not resp or not resp['ok']:
+
+	if not resp or not resp.json()['success']:
 		error = "couldn't create account"
-		return render(request, 'frontend/signup.html', {'error':error, 'form':blank_form})
-	response = HttpResponseRedirect('frontend/login.html')
-	return render(response)
+		return HttpResponseRedirect(reverse('login'))
+	response = HttpResponseRedirect('login')
+	return response
+
+def signout(request):
+	auth = request.COOKIES.get('auth')
+	if not auth:
+		return HttpResponseRedirect(reverse("login") + "?next=" + reverse("new_blogpost"))
+	if request.method == 'GET':
+		
+		resp = requests.post(
+			'http://exp-api:8000/experience/v1/sign_out',
+			data = {
+				'authenticator': auth,
+			}
+		)
+
+		if not resp or not resp.json()['success']:
+			error = 'couldn\'t sign out'
+			response = HttpResponseRedirect(reverse('home'))
+			response.delete_cookie('auth')
+			auth = request.COOKIES.get('auth')
+			return response
+		else:
+			response = HttpResponseRedirect(reverse('home'))
+			response.delete_cookie('auth')
+			return response
+
+
 
 

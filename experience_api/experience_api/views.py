@@ -55,7 +55,7 @@ def new_post(request):
 		response = requests.post(
 			url,
 			data = {
-				'author_id': request.POST['author_id'],
+				'authenticator': request.POST['authenticator'],
 				'title': request.POST['title'],
 				'body': request.POST['body'],
 			},
@@ -83,7 +83,7 @@ def sign_in(request):
 			return HttpResponse(response.json()['response'])
 
 @csrf_exempt
-def sign_up (request):
+def sign_up(request):
 	if request.method == 'POST':
 		url = 'http://models-api:8000/api/v1/users/new'
 		response = requests.post(
@@ -100,3 +100,19 @@ def sign_up (request):
 			return JsonResponse({ 'success': True, 'response': 'ok'})
 		else:
 			return HttpResponse(response)
+
+@csrf_exempt
+def sign_out(request):
+	if request.method == 'POST':
+		url = 'http://models-api:8000/api/v1/users/sign_out'
+		response = requests.post(
+			url,
+			data = {
+				'authenticator': request.POST['authenticator'],
+			},
+		)
+
+		if response and response.json()['success']:
+			return JsonResponse({ 'success': True, 'response': 'Authenticator deleted' })
+		else:
+			return JsonResponse({ 'success': False, 'response': response.json()['response'] })

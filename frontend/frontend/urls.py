@@ -16,9 +16,10 @@ from django.conf.urls import include, url
 from frontend import views
 
 urlpatterns = [
-	url(r'^home', views.home, name = 'home'),
-	url(r'^post/(?P<post_id>[0-9]+)$', views.post, name = 'blog_post'),
+	url(r'^home', views.home, name='home'),
+	url(r'^post/(?P<post_id>[0-9]+)$', views.post, name='blog_post'),
 	url(r'^post/new$', views.new_blogpost, name='new_blogpost'),
-	url(r'^login', views.login, name = 'login'),
-	url(r'^signup', views.signup, name = 'signup'),
+	url(r'^login', views.login, name='login'),
+	url(r'^signup', views.signup, name='signup'),
+	url(r'^signout$', views.signout, name='signout')
 ]
