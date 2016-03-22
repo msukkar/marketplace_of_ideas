@@ -65,4 +65,3 @@ def new_post(request):
 			return JsonResponse({ 'success': True, 'response': 'Successfully added a new post' })
 		else:
 			return HttpResponse(response.json()['response'])
-
