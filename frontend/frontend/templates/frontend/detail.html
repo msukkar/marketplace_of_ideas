@@ -1,11 +1,11 @@
 {% extends "frontend/base.html" %}
 
 {% block content %}
-	<h1> Detail View <h1>
 	{% if response %}
 		{% for blog in response %}
-			<h1> {{ blog.fields.title }} </h1>
-			<h3> by {{ blog.fields.author_name }} </h3>
+			<div class="page-header">
+  				<h1>{{ blog.fields.title }} <small> by {{ blog.fields.author_name }} </small></h1>
+			</div>
 			<h5> {{ blog.fields.body }} </h5>
 			<br/>
 			<h2> Comments </h2>

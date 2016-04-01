@@ -1,11 +1,16 @@
 {% extends "frontend/base.html" %}
 
 {% block content %}
-	<h1>Login</h1>
-	<form action="/login" method="post">
-		{% csrf_token %}
-		{{ form }}
-		<input type="submit" value="Submit" />
-	</form>
-	<a href= "{% url 'signup' %}"><h4><small> Sign up! </small></h4></a>
+	
+	<div class="container">
+		<form action="/login" method="post" class="form-signin">
+			{% csrf_token %}
+			<h2>Please sign in</h2>
+			{{ form.username }}
+			{{ form.password }}
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			<a href= "{% url 'signup' %}"><h4><small> Sign up! </small></h4></a>
+		</form>
+
+    </div>
 {% endblock %}
