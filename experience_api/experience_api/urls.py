@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^experience/v1/sign_in$', views.sign_in),
     url(r'^experience/v1/sign_up$', views.sign_up),
     url(r'^experience/v1/sign_out$', views.sign_out),
+    url(r'^experience/v1/search$', views.search),
 ]

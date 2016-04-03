@@ -169,6 +169,28 @@ def signout(request):
 			response.delete_cookie('auth')
 			return response
 
+def results(request):
+	if request.method == 'POST':
+
+		if request.POST.get('query'):
+			query_text = request.POST['query']
+			# return HttpResponse(query_text)
+
+			response = requests.post(
+				'http://exp-api:8000/experience/v1/search',
+				data = {
+					'query': query_text,
+				}
+			)
+
+			if response and response.json()['success']:
+				# return HttpResponse(response.json()['response']['hits']['hits'])
+				return render(request, 'frontend/search_results.html', {'results': response.json()['response']})
+				# return HttpResponseRedirect(reverse(''))
+			elif not response.json()['success']:
+				return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing"))
+
+
 
 
 

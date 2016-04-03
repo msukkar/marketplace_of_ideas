@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 from kafka import KafkaProducer
+from elasticsearch import Elasticsearch
 
 @csrf_exempt
 def home(request):
@@ -53,7 +54,7 @@ def new_post(request):
 	if request.method == 'POST':
 		url = 'http://models-api:8000/api/v1/posts/new'
 
-		# producer = KafkaProducer(bootstrap_servers='kafka:9092')
+		producer = KafkaProducer(bootstrap_servers='kafka:9092')
 
 		response = requests.post(
 			url,
@@ -65,8 +66,8 @@ def new_post(request):
 		)
 
 		if response and response.json()['success']:
-			# some_new_listing = {'title': response.json()['title'], 'body': response.json()['body'], 'id': response.json()['id']}
-			# producer.send('new-listings-topic', json.dumps(some_new_listing).encode('utf-8'))
+			some_new_listing = {'title': response.json()['title'], 'body': response.json()['body'], 'id': response.json()['id']}
+			producer.send('new-listings-topic', json.dumps(some_new_listing).encode('utf-8'))
 			return JsonResponse({ 'success': True, 'response': 'Successfully added a new post' })
 		else:
 			return JsonResponse({ 'success': False })
@@ -121,3 +122,19 @@ def sign_out(request):
 			return JsonResponse({ 'success': True, 'response': 'Authenticator deleted' })
 		else:
 			return JsonResponse({ 'success': False, 'response': response.json()['response'] })
+
+@csrf_exempt
+def search(request):
+	if request.method == 'POST':
+		query_text = request.POST['query']
+
+		es = Elasticsearch(['es'])
+		search_results = es.search(index='listing_index', body={'query': {'query_string': {'query': query_text}}, 'size': 10})
+		json_results = search_results
+		results_array = []
+		for hit in json_results['hits']['hits']:
+			hit_id = hit['_source']['id']
+			hit_body = hit['_source']['body']
+			hit_title = hit['_source']['title']
+			results_array.append({'id': hit_id, 'body': hit_body, 'title': hit_title})
+		return JsonResponse({ 'success': True, 'response': results_array })

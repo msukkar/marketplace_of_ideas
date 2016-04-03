@@ -36,6 +36,8 @@ exp:
     image: tp33/django-docker:1.3
     links:
        - models:models-api
+       - kafka:kafka
+       - es:es
     ports:
        - "8002:8000"
     volumes:

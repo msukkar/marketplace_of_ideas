@@ -21,5 +21,6 @@ urlpatterns = [
 	url(r'^post/new$', views.new_blogpost, name='new_blogpost'),
 	url(r'^login', views.login, name='login'),
 	url(r'^signup', views.signup, name='signup'),
-	url(r'^signout$', views.signout, name='signout')
+	url(r'^signout$', views.signout, name='signout'),
+	url(r'^results$', views.results, name='results')
 ]

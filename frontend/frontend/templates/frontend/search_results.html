@@ -1,0 +1,13 @@
+{% extends "frontend/base.html" %}
+
+{% block content %}
+	{% if results %}
+		{% for result in results %}
+			<div class="blog-post" id="{{ result.id }}">
+	          <a href = "{% url 'blog_post' result.id %}"><h2> {{ result.title }} </h2> </a>
+	          <p> {{ result.body }} </p>
+	          <br>
+	        </div>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
