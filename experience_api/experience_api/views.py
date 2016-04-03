@@ -129,7 +129,10 @@ def search(request):
 		query_text = request.POST['query']
 
 		es = Elasticsearch(['es'])
-		search_results = es.search(index='listing_index', body={'query': {'query_string': {'query': query_text}}, 'size': 10})
+		try:
+			search_results = es.search(index='listing_index', body={'query': {'query_string': {'query': query_text}}, 'size': 10})
+		except:
+			return JsonResponse({ 'success': False })
 		json_results = search_results
 		results_array = []
 		for hit in json_results['hits']['hits']:

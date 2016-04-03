@@ -188,9 +188,10 @@ def results(request):
 				return render(request, 'frontend/search_results.html', {'results': response.json()['response']})
 				# return HttpResponseRedirect(reverse(''))
 			elif not response.json()['success']:
-				return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing"))
+				return render(request, 'frontend/search_results.html', {})
 
 
+	return HttpResponseRedirect(reverse('home'))
 
 
 
