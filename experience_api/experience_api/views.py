@@ -2,6 +2,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
+from kafka import KafkaProducer
 
 @csrf_exempt
 def home(request):
@@ -52,6 +53,8 @@ def new_post(request):
 	if request.method == 'POST':
 		url = 'http://models-api:8000/api/v1/posts/new'
 
+		# producer = KafkaProducer(bootstrap_servers='kafka:9092')
+
 		response = requests.post(
 			url,
 			data = {
@@ -62,9 +65,11 @@ def new_post(request):
 		)
 
 		if response and response.json()['success']:
+			# some_new_listing = {'title': response.json()['title'], 'body': response.json()['body'], 'id': response.json()['id']}
+			# producer.send('new-listings-topic', json.dumps(some_new_listing).encode('utf-8'))
 			return JsonResponse({ 'success': True, 'response': 'Successfully added a new post' })
 		else:
-			return HttpResponse(response.json()['response'])
+			return JsonResponse({ 'success': False })
 
 @csrf_exempt
 def sign_in(request):

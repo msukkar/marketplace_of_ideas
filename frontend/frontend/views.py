@@ -78,7 +78,7 @@ def new_blogpost(request):
 
 			if response and response.json()['success']:
 				return HttpResponseRedirect(reverse('home'))
-			elif resp['error']:
+			elif not response.json()['success']:
 				return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing"))
 			return HttpResponse("You submitted data" + title + " " + body)
 

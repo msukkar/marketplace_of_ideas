@@ -313,7 +313,8 @@ def create_post(request):
                           'success': True,                      \
                           'title': request.POST['title'],       \
                           'body': request.POST['body'],         \
-                          'author': authenticator.user_id
+                          'author': authenticator.user_id,      \
+                          'id': post.id
                         })
 
 
