@@ -1,10 +1,23 @@
 from django.db import models
 
 class User(models.Model):
-	username = models.CharField(max_length=50)
-	first_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
-	password = models.CharField(max_length=96)
+	username = models.CharField(
+		blank=False,
+		unique=True,
+		max_length=50
+	)
+	first_name = models.CharField(
+		blank=False,
+		max_length=50
+	)
+	last_name = models.CharField(
+		blank=False,
+		max_length=50
+	)
+	password = models.CharField(
+		blank=False,
+		max_length=96
+	)
 	followed_people = models.ManyToManyField('self', related_name='follows', symmetrical=False)
 	# date_created = models.DateTimeField(
 	# 	auto_now_add=True
@@ -12,13 +25,17 @@ class User(models.Model):
 
 class Authenticator(models.Model):
 	authenticator = models.CharField(max_length=255, primary_key=True)
-	user_id = models.IntegerField()
+	user_id = models.IntegerField(
+		blank=False
+	)
 	date_created = models.DateTimeField(
 		auto_now_add=True
 	)
 
 class BlogPost(models.Model):
-	title = models.TextField()
+	title = models.TextField(
+		blank=False
+	)
 	body = models.TextField()
 	author = models.ForeignKey(User)
 
