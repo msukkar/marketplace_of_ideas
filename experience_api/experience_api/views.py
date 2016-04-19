@@ -86,7 +86,7 @@ def sign_in(request):
 		if response and response.json()['success']:
 			return JsonResponse({ 'success': True, 'response': response.json()['authenticator']})
 		else:
-			return HttpResponse(response.json()['response'])
+			return JsonResponse({ 'success': True, 'response': response.json()['response']})
 
 @csrf_exempt
 def sign_up(request):
@@ -105,7 +105,7 @@ def sign_up(request):
 		if response and response.json()['success']:
 			return JsonResponse({ 'success': True, 'response': 'ok'})
 		else:
-			return HttpResponse(response)
+			return JsonResponse({ 'success': True, 'response': response})
 
 @csrf_exempt
 def sign_out(request):
