@@ -6,11 +6,17 @@ from django.template import loader
 from django.core.urlresolvers import reverse
 import requests
 import json
+import redis
 from .forms import LoginForm, BlogPostForm, SignupForm
 
 @csrf_exempt
 def home(request):
 	if request.method == 'GET':
+		redis_instance = redis.StrictRedis(host='redis', port='6379', db=0)
+
+		if redis_instance.get('home') is not None:
+			return HttpResponse(redis_instance.get('home'))
+
 		url = 'http://exp-api:8000/experience/v1/home'
 		response = requests.get(url).json()
 		# Probably rearrange based on popularity, time, etc
@@ -18,44 +24,40 @@ def home(request):
 			'response': json.loads(response['data'])
 		}
 		template = loader.get_template('frontend/start.html')
+		redis_instance.set('home', template.render(context, request))
 		return HttpResponse(template.render(context, request))
 
 	return JsonResponse({ 'success': False })
 
 def post(request, post_id):
+	post_id_str = str(post_id)
 	if request.method == 'GET':
-		url = 'http://exp-api:8000/experience/v1/post/' + str(post_id)
+		redis_instance = redis.StrictRedis(host='redis', port='6379', db=0)
+
+		# check if this detail page is already in redis
+		if redis_instance.get(post_id_str) is not None:
+			return HttpResponse(redis_instance.get(post_id_str))
+
+		# otherwise, make regular request
+		url = 'http://exp-api:8000/experience/v1/post/' + post_id_str
 		response = requests.get(url).json()
 	
 		if not response['success']:
 			return HttpResponse("We couldn't find a post with that id!")
 		else:
 			context = {
-				# 'response': json.loads(response.json())
 				'response': json.loads(response['data'])
 			}
+
 			template = loader.get_template('frontend/detail.html')
+
+			# add page to redis
+			redis_instance.set(post_id_str, template.render(context, request))
+			redis_instance.expire(post_id_str, 86400)
 			return HttpResponse(template.render(context, request))
 
 	return JsonResponse({ 'success': False })
 
-
-# def create_listing(request):
-#     auth = request.COOKIES.get('auth')
-#     if not auth:
-#       # handle user not logged in while trying to create a listing
-#       return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing")
-#     if request.method == 'GET':
-#       return render("create_listing.html", ...)
-#     f = create_listing_form(request.POST)
-#     ...
-#     resp = create_listing_exp_api(auth, ...)
-#     if resp and not resp['ok']:
-#         if resp['error'] == exp_srvc_errors.E_UNKNOWN_AUTH:
-#             # exp service reports invalid authenticator -- treat like user not logged in
-#             return HttpResponseRedirect(reverse("login") + "?next=" + reverse("create_listing")
-#      ...
-#      return render("create_listing_success.html", ...)
 def new_blogpost(request):
 	auth = request.COOKIES.get('auth')
 	if not auth:
@@ -66,6 +68,9 @@ def new_blogpost(request):
 		if form.is_valid():
 			title = form.cleaned_data['title']
 			body = form.cleaned_data['body']
+
+			redis_instance = redis.StrictRedis(host='redis', port='6379', db=0)
+			redis_instance.delete('home')
 
 			response = requests.post(
 				'http://exp-api:8000/experience/v1/post/new',
